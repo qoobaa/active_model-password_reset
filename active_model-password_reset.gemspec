@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["kuba@jah.pl"]
   spec.description   = %q{Simple password reset model implemented on top of ActiveModel::Model}
   spec.summary       = %q{Simple password reset model implemented on top of ActiveModel::Model}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/cowbell/active_model-password_reset"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
