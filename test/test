@@ -1,6 +1,0 @@
-  /home/kuba/Projects/active_model-password_reset/test:
-  total used in directory 12 available 54138240
-  drwxr-xr-x 1 kuba users  80 Jan 30 16:02 .
-  drwxr-xr-x 1 kuba users 206 Jan 30 15:56 ..
-  -rw-r--r-- 1 kuba users 759 Jan 30 16:01 password_reset_test.rb
-  -rw-r--r-- 1 kuba users  58 Jan 30 15:59 test_helper.rb
