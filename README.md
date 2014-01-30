@@ -50,6 +50,8 @@ The most popular workflow is:
         # find raises TokenInvalid, TokenExpired, EmailInvalid, PasswordChanged exceptions
         @password_reset = ActiveModel::PasswordReset.find(params[:id])
         @user = @password_reset.user
+      rescue ActiveModel::PasswordReset::Error
+        raise ActiveRecord::RecordNotFound # display 404
       end
 
       def update
@@ -60,6 +62,8 @@ The most popular workflow is:
         else
           render :edit
         end
+      rescue ActiveModel::PasswordReset::Error
+        raise ActiveRecord::RecordNotFound # display 404
       end
 
       private
