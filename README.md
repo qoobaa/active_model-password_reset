@@ -1,6 +1,6 @@
 # ActiveModel::PasswordReset
 
-`ActiveModel::PasswordReset` is a lightweight password reset model implemented on top of ActiveModel::Model. It does not require storing any additional information in the database. Resulting token is signed by `ActiveSupport::MessageVerifier` class, using `secret_key_base` and salt. Token is invalidated when:
+`ActiveModel::PasswordReset` is a lightweight password reset model implemented on top of `ActiveModel::Model`. It does not require storing any additional information in the database. Resulting token is signed by `ActiveSupport::MessageVerifier` class, using `secret_key_base` and salt. Token is invalidated when:
 
 * user changed password
 * expiration time passed (default: 24 hours)
