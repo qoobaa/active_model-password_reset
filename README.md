@@ -9,7 +9,7 @@
 
 Add this line to your application's Gemfile:
 
-    gem 'active_model-password_reset'
+    gem "active_model-password_reset"
 
 And then execute:
 
