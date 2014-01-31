@@ -9,14 +9,15 @@ module ActiveModel
 
     include Model
 
-    attr_accessor :email
+    attr_reader :email
+    attr_accessor :user
 
     validates :email, presence: true
     validate :existence, if: -> { email.present? }
     delegate :id, to: :user, prefix: true, allow_nil: true
 
-    def user
-      return @user if defined?(@user)
+    def email=(email)
+      @email = email
       @user = User.find_by(email: email)
     end
 
