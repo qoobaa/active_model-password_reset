@@ -78,7 +78,8 @@ If you don't like the default behavior, you can always inherit the session model
     class PasswordReset < ActiveModel::PasswordReset
       EXPIRATION_TIME = 1.hour
 
-      def user
+      def email=(email)
+        @email = email
         @user = Admin.find_by(email: email)
       end
     end
