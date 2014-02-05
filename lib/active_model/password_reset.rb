@@ -25,10 +25,12 @@ module ActiveModel
       email = user.email
       digest = Digest::MD5.digest(user.password_digest)
       expires_at = Time.now.to_i + EXPIRATION_TIME
-      MessageVerifier.generate([email, digest, expires_at])
+      token = MessageVerifier.generate([email, digest, expires_at])
+      CGI.escape(token)
     end
 
-    def self.find(token)
+    def self.find(escaped_token)
+      token = CGI.unescape(escaped_token)
       email, digest, expires_at = MessageVerifier.verify(token)
       raise TokenExpired if Time.now.to_i > expires_at.to_i
       new(email: email).tap do |password_reset|
