@@ -51,20 +51,24 @@ class PasswordResetTest < Test::Unit::TestCase
 
   def test_find_raises_exception_with_invalid_email
     token = ActiveModel::PasswordReset::MessageVerifier.generate(["invalid@example.com", Digest::MD5.digest("alicedigest"), Time.now.to_i + 3600])
-    assert_raises(ActiveModel::PasswordReset::EmailInvalid) { ActiveModel::PasswordReset.find(CGI.escape(token)) }
+    assert_raises(ActiveModel::PasswordReset::EmailInvalid) { ActiveModel::PasswordReset.find(token) }
   end
 
   def test_find_raises_exception_with_invalid_token
     assert_raises(ActiveModel::PasswordReset::TokenInvalid) { ActiveModel::PasswordReset.find("invalidtoken") }
   end
 
+  def test_find_raises_exception_with_non_base64_token
+    assert_raises(ActiveModel::PasswordReset::TokenInvalid) { ActiveModel::PasswordReset.find("%%%%%%%%%") }
+  end
+
   def test_find_raises_exception_with_expired_token
     token = ActiveModel::PasswordReset::MessageVerifier.generate(["alice@example.com", Digest::MD5.digest("alicedigest"), Time.now.to_i - 3600])
-    assert_raises(ActiveModel::PasswordReset::TokenExpired) { ActiveModel::PasswordReset.find(CGI.escape(token)) }
+    assert_raises(ActiveModel::PasswordReset::TokenExpired) { ActiveModel::PasswordReset.find(token) }
   end
 
   def test_find_raises_exception_with_changed_password
     token = ActiveModel::PasswordReset::MessageVerifier.generate(["alice@example.com", Digest::MD5.digest("anotheralicedigest"), Time.now.to_i + 3600])
-    assert_raises(ActiveModel::PasswordReset::PasswordChanged) { ActiveModel::PasswordReset.find(CGI.escape(token)) }
+    assert_raises(ActiveModel::PasswordReset::PasswordChanged) { ActiveModel::PasswordReset.find(token) }
   end
 end

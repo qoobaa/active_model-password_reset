@@ -9,12 +9,14 @@ module ActiveModel
 
       class << self
         def generate(object)
-          instance.message_verifier.generate(object)
+          token = instance.message_verifier.generate(object)
+          Base64.urlsafe_encode64(token)
         end
 
         def verify(string)
-          instance.message_verifier.verify(string)
-        rescue ActiveSupport::MessageVerifier::InvalidSignature
+          token = Base64.urlsafe_decode64(string)
+          instance.message_verifier.verify(token)
+        rescue ActiveSupport::MessageVerifier::InvalidSignature, ArgumentError
           raise TokenInvalid
         end
       end
