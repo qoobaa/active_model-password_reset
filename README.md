@@ -41,7 +41,7 @@ The most popular workflow is:
       private
 
       def password_reset_params
-        params.require(:password_reset).permit(:email)
+        params.require(:active_model_password_reset).permit(:email)
       end
     end
 
