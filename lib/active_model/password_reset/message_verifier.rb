@@ -22,7 +22,7 @@ module ActiveModel
       end
 
       def initialize
-        key_generator = ActiveSupport::KeyGenerator.new(Rails.application.config.secret_key_base, iterations: 1000)
+        key_generator = ActiveSupport::KeyGenerator.new(Rails.application.secrets.secret_key_base, iterations: 1000)
         secret = key_generator.generate_key("password reset salt")
         @message_verifier = ActiveSupport::MessageVerifier.new(secret)
       end
