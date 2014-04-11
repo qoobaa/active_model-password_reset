@@ -1,6 +1,5 @@
 require "active_model/password_reset/version"
 require "active_model/password_reset/error"
-require "active_model/password_reset/message_verifier"
 require "active_model"
 
 module ActiveModel
