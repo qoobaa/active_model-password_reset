@@ -25,11 +25,11 @@ module ActiveModel
       email = user.email
       digest = Digest::MD5.digest(user.password_digest)
       expires_at = Time.now.to_i + EXPIRATION_TIME
-      MessageVerifier.generate([email, digest, expires_at])
+      self.class.generate_token([email, digest, expires_at])
     end
 
     def self.find(token)
-      email, digest, expires_at = MessageVerifier.verify(token)
+      email, digest, expires_at = verify_token(token)
       raise TokenExpired if Time.now.to_i > expires_at.to_i
       new(email: email).tap do |password_reset|
         raise EmailInvalid if password_reset.invalid?
@@ -38,6 +38,20 @@ module ActiveModel
     end
 
     private
+
+    def self.message_verifier
+      Rails.application.message_verifier("password reset salt")
+    end
+
+    def self.generate_token(*args)
+      Base64.urlsafe_encode64(message_verifier.generate(*args))
+    end
+
+    def self.verify_token(string)
+      message_verifier.verify(Base64.urlsafe_decode64(string))
+    rescue ActiveSupport::MessageVerifier::InvalidSignature, ArgumentError
+      raise TokenInvalid
+    end
 
     def digest
       Digest::MD5.digest(user.password_digest)

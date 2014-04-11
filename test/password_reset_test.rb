@@ -19,6 +19,14 @@ class User
   end
 end
 
+module ActiveModel
+  def PasswordReset.message_verifier
+    key_generator = ActiveSupport::KeyGenerator.new("12345678901234567890123456789012345678901234567890123456789012345678901234567890", iterations: 1000)
+    secret = key_generator.generate_key("password reset salt")
+    ActiveSupport::MessageVerifier.new(secret)
+  end
+end
+
 class PasswordResetTest < Test::Unit::TestCase
   include ActiveModel::Lint::Tests
 
@@ -50,7 +58,7 @@ class PasswordResetTest < Test::Unit::TestCase
   end
 
   def test_find_raises_exception_with_invalid_email
-    token = ActiveModel::PasswordReset::MessageVerifier.generate(["invalid@example.com", Digest::MD5.digest("alicedigest"), Time.now.to_i + 3600])
+    token = ActiveModel::PasswordReset.generate_token(["invalid@example.com", Digest::MD5.digest("alicedigest"), Time.now.to_i + 3600])
     assert_raises(ActiveModel::PasswordReset::EmailInvalid) { ActiveModel::PasswordReset.find(token) }
   end
 
@@ -63,12 +71,12 @@ class PasswordResetTest < Test::Unit::TestCase
   end
 
   def test_find_raises_exception_with_expired_token
-    token = ActiveModel::PasswordReset::MessageVerifier.generate(["alice@example.com", Digest::MD5.digest("alicedigest"), Time.now.to_i - 3600])
+    token = ActiveModel::PasswordReset.generate_token(["alice@example.com", Digest::MD5.digest("alicedigest"), Time.now.to_i - 3600])
     assert_raises(ActiveModel::PasswordReset::TokenExpired) { ActiveModel::PasswordReset.find(token) }
   end
 
   def test_find_raises_exception_with_changed_password
-    token = ActiveModel::PasswordReset::MessageVerifier.generate(["alice@example.com", Digest::MD5.digest("anotheralicedigest"), Time.now.to_i + 3600])
+    token = ActiveModel::PasswordReset.generate_token(["alice@example.com", Digest::MD5.digest("anotheralicedigest"), Time.now.to_i + 3600])
     assert_raises(ActiveModel::PasswordReset::PasswordChanged) { ActiveModel::PasswordReset.find(token) }
   end
 end
