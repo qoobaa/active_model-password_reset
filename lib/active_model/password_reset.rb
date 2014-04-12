@@ -9,7 +9,7 @@ module ActiveModel
     include Model
 
     attr_reader :email
-    attr_accessor :user
+    attr_writer :user
 
     validates :email, presence: true
     validate :existence, if: -> { email.present? }
@@ -17,7 +17,11 @@ module ActiveModel
 
     def email=(email)
       @email = email
-      @user = User.find_by(email: email)
+      @user = nil
+    end
+
+    def user
+      @user ||= User.find_by(email: email)
     end
 
     def token
