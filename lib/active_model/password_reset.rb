@@ -16,12 +16,13 @@ module ActiveModel
     delegate :id, to: :user, prefix: true, allow_nil: true
 
     def email=(email)
+      remove_instance_variable(:@user) if defined?(@user)
       @email = email
-      @user = nil
     end
 
     def user
-      @user ||= User.find_by(email: email)
+      return @user if defined?(@user)
+      @user = User.find_by(email: email)
     end
 
     def token
